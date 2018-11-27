@@ -1,0 +1,17 @@
+    {
+      "Author": "Kritzy",
+      "Compatibility": "Compatible",
+	  "DefuserDifficulty": "Normal",
+      "Description": "Turn on a radio with the correct frequency and transmission at the correct time. Tags: Radio, frequency, transmission, transmit",
+	  "ExpertDifficulty": "Hard",
+      "ModuleID": "KritRadio",
+      "Name": "The Radio",
+      "Origin": "Mods",
+      "Published": "2018-11-26",
+      "SortKey": "THERADIO",
+      "SteamID": "1575515429",
+	  "Symbol": "Rd",
+      "TwitchPlaysScore": 5,
+      "TwitchPlaysSupport": "Supported",
+      "Type": "Regular"
+    },

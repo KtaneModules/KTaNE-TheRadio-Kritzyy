@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 02c6a60cd1c17b44aaf51f8f3bae65fc
+timeCreated: 1541626073
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: PixelSplitter
+  fontNames:
+  - PixelSplitter
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
