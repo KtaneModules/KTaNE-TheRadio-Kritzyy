@@ -19,9 +19,9 @@ MonoBehaviour:
     Module ID: KritRadio
 
 
-    HTML Manual: NAN.
+    HTML Manual: https://ktane.timwi.de/HTML/The%20Radio.html
 
-    PDF Manual: https://drive.google.com/file/d/1TVUedjADmve1NrQkI-qr50Vm2QLFb0kJ/view?usp=sharing'
+    PDF Manual: https://ktane.timwi.de/PDF/The%20Radio.pdf'
   version: v1.0
   outputFolder: Output
   previewImage: {fileID: 2800000, guid: 1acf894bef8c8c6479fce0960ac2f751, type: 3}

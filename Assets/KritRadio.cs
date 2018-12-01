@@ -703,43 +703,29 @@ public class KritRadio : MonoBehaviour
 
     void CheckBatteries()
     {
-        BatteryCount = BombInfo.GetBatteryCount();
-        if (BatteryCount > 10)
-        {
-            BatteryCount = BatteryCount - 10;
-            CheckBatteries();
-        }
-        else
-        {
-            Debug.LogFormat("[The Radio #{0}] Battery count: {1}.", moduleId, BatteryCount);
-            CheckTime();
-        }
+        BatteryCount = BombInfo.GetBatteryCount() % 10;
+        Debug.LogFormat("[The Radio #{0}] Battery count: {1}.", moduleId, BatteryCount);
+        CheckTime();
     }
 
     void CheckTime()
     {
-        string Time = BombInfo.GetFormattedTime().Remove(0, 3);
+        int Time = ((int)BombInfo.GetTime()) % 60;
 
-        string TimeSecond1 = BombInfo.GetFormattedTime().Remove(0,3).Remove(1);
-        string TimeSecond2 = BombInfo.GetFormattedTime().Remove(0, 3).Remove(0, 1);
+        int TimeSecond1 = (((int)BombInfo.GetTime()) % 60) / 10;
+        int TimeSecond2 = ((int)BombInfo.GetTime()) % 10;
 
         string Action1 = "", Action2 = "";
 
-        int IntSecond1 = 0;
-        int IntSecond2 = 0;
-
-        int.TryParse(TimeSecond1, out IntSecond1);
-        int.TryParse(TimeSecond2, out IntSecond2);
-
         Debug.LogFormat("[The Radio #{0}] Timer: {1}.", moduleId, Time);
-        Debug.LogFormat("[The Radio #{0}] 1st timer digit: {1}.", moduleId, IntSecond1);
-        Debug.LogFormat("[The Radio #{0}] 2nd timer digit: {1}.", moduleId, IntSecond2);
+        Debug.LogFormat("[The Radio #{0}] 1st timer digit: {1}.", moduleId, TimeSecond1);
+        Debug.LogFormat("[The Radio #{0}] 2nd timer digit: {1}.", moduleId, TimeSecond2);
 
         if (DesiredCountry == "Dutch")
         {
             Action1 = "the 2 timer digits combined";
             Action2 = "be " + SerialNum1Gen.ToString();
-            if (IntSecond1 + IntSecond2 == SerialNum1Gen)
+            if (TimeSecond1 + TimeSecond2 == SerialNum1Gen)
             {
                 Correct();
             }
@@ -767,7 +753,7 @@ public class KritRadio : MonoBehaviour
         {
             Action1 = "the 2 timer digits combined";
             Action2 = "match the amount of batteries (" + BatteryCount + ")";
-            if (IntSecond1 + IntSecond2 == BatteryCount)
+            if (TimeSecond1 + TimeSecond2 == BatteryCount)
             {
                 Correct();
             }
@@ -781,7 +767,7 @@ public class KritRadio : MonoBehaviour
         {
             Action1 = "the 2 timer digits combined";
             Action2 = "match than the last digit of the serial number (" + BombInfo.GetSerialNumberNumbers().Last() + ")";
-            if (IntSecond1 + IntSecond2 == BombInfo.GetSerialNumberNumbers().Last())
+            if (TimeSecond1 + TimeSecond2 == BombInfo.GetSerialNumberNumbers().Last())
             {
                 Correct();
             }
