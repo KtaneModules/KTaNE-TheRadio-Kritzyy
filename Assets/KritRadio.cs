@@ -101,12 +101,11 @@ public class KritRadio : MonoBehaviour
         {
             Command = Command.Remove(0, 11);
             int.TryParse(Command, out Timer);
-            BombTime = BombInfo.GetFormattedTime().Remove(0, 3);
-            int.TryParse(BombTime, out BombTimeInt);
+            BombTimeInt = ((int)BombInfo.GetTime()) % 60;
             if (!TPSubmittng)
             {
                 TPSubmittng = true;
-                yield return "sendtochat Transmitting at XX:" + Timer;
+                yield return "sendtochat Transmitting at " + Timer + "seconds";
                 StartCoroutine("TPWaitingTimer");
                 yield return new WaitForSeconds(1f);
             }
@@ -120,7 +119,7 @@ public class KritRadio : MonoBehaviour
         {
             if (TPSubmittng)
             {
-                yield return "sendtochat No longer transmitting at XX:" + Timer;
+                yield return "sendtochat No longer transmitting at " + Timer + "seconds";
                 StopCoroutine("TPWaitingTimer");
                 TPSubmittng = false;
                 SubmissionText.text = "";
@@ -193,8 +192,7 @@ public class KritRadio : MonoBehaviour
     {
         for (int i = 0; i < 999999999; i++)
         {
-            BombTime = BombInfo.GetFormattedTime().Remove(0, 3);
-            int.TryParse(BombTime, out BombTimeInt);
+            BombTimeInt = ((int)BombInfo.GetTime()) % 60;
             if (Timer == BombTimeInt)
             {
                 SubmitBtn();
@@ -738,8 +736,8 @@ public class KritRadio : MonoBehaviour
         else if (DesiredCountry == "English")
         {
             Action1 = "the seconds digits on the timer must match, so it";
-            Action2 = "either be XX:11, XX:22, XX:33, XX:44 or XX:55";
-            if (Time.Equals("11") || Time.Equals("22") || Time.Equals("33") || Time.Equals("44") || Time.Equals("55"))
+            Action2 = "either be XX:00, XX:11, XX:22, XX:33, XX:44 or XX:55";
+            if (TimeSecond1 == TimeSecond2)
             {
                 Correct();
             }
