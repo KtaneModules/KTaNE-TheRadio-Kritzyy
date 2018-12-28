@@ -4,8 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
-using System;
 using Random = UnityEngine.Random;
+using System;
 
 public class KritRadio : MonoBehaviour
 {
@@ -16,7 +16,6 @@ public class KritRadio : MonoBehaviour
 
     public TextMesh FrequencyText, TransmissionText;
     public TextMesh BarcodeText;
-    public TextMesh SubmissionText;
 
     public Transform SwitchTransform;
     public Transform FrequencyMarker;
@@ -24,7 +23,6 @@ public class KritRadio : MonoBehaviour
     public KMBombInfo BombInfo;
 
     public KMAudio FrequencyChange, StaticNoise;
-    public GameObject TPSubmittingBox;
 
     public KMAudio DutchSongs, EnglishSongs, GermanSongs, FrenchSongs;
 
@@ -77,18 +75,21 @@ public class KritRadio : MonoBehaviour
     string ErrorMessage;
     string FrequencyString;
     string DesiredCountry;
-    string BombTime;
 
     string serialChar1;
     string serialChar2;
     string serialChar3;
     string serialChar4;
     string serialChar5;
-    
 
+    //TP related
+    public string CommandString;
+    public int CommandInt;
+    public int TPBombTimer;
+    //TP related
 
 #pragma warning disable 0414
-    private readonly string TwitchHelpMessage = "Type '!{0} channel up/down' to change the radio channel and '!{0} switch' to switch transmission. Then type '!{0} transmit at <seconds digits>' to turn the radio on and submit your answer. To reset to the Factory Settings, type '!{0} reset'";
+    private readonly string TwitchHelpMessage = "Type '!{0} channel up/down 5' to move the radio 5 channels and '!{0} switch' to switch transmission. Then type '!{0} transmit at 00' to turn the radio on at XX:00 and submit your answer. To reset to the Factory Settings, type '!{0} reset'";
 #pragma warning restore 0414
 
     IEnumerator ProcessTwitchCommand(string Command)
@@ -96,38 +97,15 @@ public class KritRadio : MonoBehaviour
         Command = Command.ToLowerInvariant().Trim();
 
         KMSelectable buttonSelectable = null;
-
+         
         if (Regex.IsMatch(Command, @"^transmit at +\d\d$"))
         {
-            Command = Command.Remove(0, 11);
-            int.TryParse(Command, out Timer);
-            BombTimeInt = ((int)BombInfo.GetTime()) % 60;
-            if (!TPSubmittng)
-            {
-                TPSubmittng = true;
-                yield return "sendtochat Transmitting at " + Timer + "seconds";
-                StartCoroutine("TPWaitingTimer");
-                yield return new WaitForSeconds(1f);
-            }
-            else
-            {
-                yield return "sendtochat Someone is already transmitting for this module.";
-            }
-            //buttonSelectable = OnBtn;
-        }
-        else if (Command.Equals("cancel"))
-        {
-            if (TPSubmittng)
-            {
-                yield return "sendtochat No longer transmitting at " + Timer + "seconds";
-                StopCoroutine("TPWaitingTimer");
-                TPSubmittng = false;
-                SubmissionText.text = "";
-            }
-            else
-            {
-                yield return "sendtochat The module isn't transmitting anything.";
-            }
+            CommandString = Regex.Replace(Command, "[^0-9.]", "");
+            CommandInt = int.Parse(CommandString);
+            StartCoroutine("TimerHandler");
+            yield return new WaitUntil(() => CommandInt == TPBombTimer);
+            buttonSelectable = OnBtn;
+            StopCoroutine("TimerHandler");
         }
         else if (Command.Equals("switch"))
         {
@@ -158,7 +136,7 @@ public class KritRadio : MonoBehaviour
             int.TryParse(Command, out TPMultiplier);
             if (TPMultiplier + ChannelNr > 20)
             {
-                yield return "sendtochat That command is not possible as the radio only has 20 channels";
+                yield return "sendtochaterror That command is not possible as the radio only has 20 channels";
             }
             else
             {
@@ -172,41 +150,35 @@ public class KritRadio : MonoBehaviour
             int.TryParse(Command, out TPMultiplier);
             if (ChannelNr - TPMultiplier < 1)
             {
-                yield return "sendtochat That command is not possible as it would put the channel at 0 or lower, which don't exist.";
+                yield return "sendtochaterror That command is not possible as it would put the channel at 0 or lower, which don't exist.";
             }
             else
             {
                 buttonSelectable = FreqDownBtn;
             }
         }
+        else if (Regex.IsMatch(Command, @"^channel down") || Regex.IsMatch(Command, @"^channel up"))
+        {
+            yield return "sendtochaterror Please specify with how many channels you wanna go up/down.";
+        }
         else
         {
-            yield return "sendtochat The command \"" + Command + "\" does not exist in the current context.";
+            yield return "sendtochaterror The command \"" + Command + "\" does not exist in the current context.";
         }
         yield return buttonSelectable;
         yield return new WaitForSeconds(0.1f);
         yield return buttonSelectable;
     }
 
-    IEnumerator TPWaitingTimer()
+    IEnumerator TimerHandler()
     {
-        for (int i = 0; i < 999999999; i++)
+        while (true)
         {
-            BombTimeInt = ((int)BombInfo.GetTime()) % 60;
-            if (Timer == BombTimeInt)
-            {
-                SubmitBtn();
-                StopCoroutine("TPWaitingTimer");
-                TPSubmittng = false;
-                SubmissionText.text = "";
-            }
-            else
-            {
-                SubmissionText.text = "Submitting...";
-            }
+            TPBombTimer = ((int)BombInfo.GetTime()) % 60;
             yield return new WaitForSecondsRealtime(1f);
         }
     }
+
 
     void Awake()
     {
