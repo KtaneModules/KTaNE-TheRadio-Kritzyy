@@ -211,7 +211,6 @@ public class KritRadio : MonoBehaviour
             CurrentTransmission = "AM";
         }
         TransmissionText.text = CurrentTransmission;
-        Debug.LogFormat("[The Radio #{0}] The starting transmission is '{1}'.", moduleId, CurrentTransmission);
         BarcodeGenerator();
     }
 
@@ -466,8 +465,6 @@ public class KritRadio : MonoBehaviour
         FrequencyString = Frequency.ToString();
         FrequencyText.text = FrequencyString;
 
-        Debug.LogFormat("[The Radio #{0}] The starting channel number is {1} ({2}) with frequency {3}.", moduleId, ChannelNr, ChannelName, Frequency);
-
         DesiredFrequencyGenerator();
     }
 
@@ -492,7 +489,6 @@ public class KritRadio : MonoBehaviour
         {
             DesiredCountry = "French";
         }
-        Debug.LogFormat("[The Radio #{0}] The desired country is {1}.", moduleId, DesiredCountry);
 
         if (DesiredCountry == "Dutch")
         {
@@ -627,7 +623,7 @@ public class KritRadio : MonoBehaviour
             }
         } //French radio channels
 
-        Debug.LogFormat("[The Radio #{0}] The desired channel is {1} ({2}) with frequency {3}.", moduleId, DesiredChannelNr, ChannelName, DesiredFrequency);
+        Debug.LogFormat("[The Radio #{0}] The desired channel is the {1} {2} ({3}) with frequency {4}.", moduleId, DesiredCountry, ChannelName, DesiredChannelNr, DesiredFrequency);
         if (DesiredFrequency == FirstFrequency)
             Debug.LogFormat("[The Radio #{0}] The starting channel and the desired channel match! Look at you!", moduleId);
 
@@ -1033,16 +1029,7 @@ public class KritRadio : MonoBehaviour
 
         if (UsingTwitchPlays && TPMultiplier < 1)
         {
-            Debug.LogFormat("[The Radio #{0}] The channel is now {1} with frequency {2}.", moduleId, ChannelNr, Frequency);
             UsingTwitchPlays = false;
-        }
-        else if (UsingTwitchPlays && TPMultiplier > 0)
-        {
-
-        }
-        else if (!UsingTwitchPlays)
-        {
-            Debug.LogFormat("[The Radio #{0}] The channel is now {1} with frequency {2}.", moduleId, ChannelNr, Frequency);
         }
     }
 
@@ -1061,12 +1048,7 @@ public class KritRadio : MonoBehaviour
         GetComponent<KMSelectable>().AddInteractionPunch();
         if (UsingTwitchPlays)
         {
-            Debug.LogFormat("[The Radio #{0}] Frequency turned up {1} times.", moduleId, TPMultiplier);
             TPMultiplier--;
-        }
-        else
-        {
-            Debug.LogFormat("[The Radio #{0}] Frequency turned up.", moduleId);
         }
         RaiseFreq();
         return false;
@@ -1078,12 +1060,7 @@ public class KritRadio : MonoBehaviour
         GetComponent<KMSelectable>().AddInteractionPunch();
         if (UsingTwitchPlays)
         {
-            Debug.LogFormat("[The Radio #{0}] Frequency turned down {1} times.", moduleId, TPMultiplier);
             TPMultiplier--;
-        }
-        else
-        {
-            Debug.LogFormat("[The Radio #{0}] Frequency turned down.", moduleId);
         }
         LowerFreq();
         return false;
