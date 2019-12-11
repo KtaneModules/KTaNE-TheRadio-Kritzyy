@@ -480,7 +480,7 @@ public class KritRadio : MonoBehaviour
         {
             DesiredCountry = "Dutch";
         }
-        else if (BombInfo.GetBatteryCount(Battery.D) > 0 && Batteries > 0)
+        else if (BombInfo.GetBatteryCount() == BombInfo.GetBatteryHolderCount() && Batteries > 0)
         {
             DesiredCountry = "English";
         }
