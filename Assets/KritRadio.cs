@@ -83,9 +83,9 @@ public class KritRadio : MonoBehaviour
     string serialChar5;
 
     //TP related
-    public string CommandString;
-    public int CommandInt;
-    public int TPBombTimer;
+    string CommandString;
+    int CommandInt;
+    int TPBombTimer;
     //TP related
 
 #pragma warning disable 0414
@@ -103,7 +103,10 @@ public class KritRadio : MonoBehaviour
             CommandString = Regex.Replace(Command, "[^0-9.]", "");
             CommandInt = int.Parse(CommandString);
             StartCoroutine("TimerHandler");
-            yield return new WaitUntil(() => CommandInt == TPBombTimer);
+            while (CommandInt != TPBombTimer)
+            {
+                yield return "trycancel";
+            }
             buttonSelectable = OnBtn;
             StopCoroutine("TimerHandler");
         }
@@ -175,7 +178,7 @@ public class KritRadio : MonoBehaviour
         while (true)
         {
             TPBombTimer = ((int)BombInfo.GetTime()) % 60;
-            yield return new WaitForSecondsRealtime(1f);
+            yield return new WaitForSecondsRealtime(0.1f);
         }
     }
 
@@ -477,7 +480,7 @@ public class KritRadio : MonoBehaviour
         {
             DesiredCountry = "Dutch";
         }
-        else if (Batteries == BombInfo.GetBatteryHolderCount() && Batteries > 0)
+        else if (BombInfo.GetBatteryCount(Battery.D) > 0 && Batteries > 0)
         {
             DesiredCountry = "English";
         }
