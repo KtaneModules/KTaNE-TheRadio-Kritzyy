@@ -108,6 +108,7 @@ public class KritRadio : MonoBehaviour
                 yield return "trycancel";
             }
             buttonSelectable = OnBtn;
+            yield return "solve";
             StopCoroutine("TimerHandler");
         }
         else if (Command.Equals("switch"))
